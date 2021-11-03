@@ -98,6 +98,7 @@ public class InAppBrowser extends CordovaPlugin {
     private static final String LOAD_STOP_EVENT = "loadstop";
     private static final String LOAD_ERROR_EVENT = "loaderror";
     private static final String MESSAGE_EVENT = "message";
+    private static final String BLOCK_IMAGES = "blockimages";
     private static final String CLEAR_ALL_CACHE = "clearcache";
     private static final String CLEAR_SESSION_CACHE = "clearsessioncache";
     private static final String HARDWARE_BACK_BUTTON = "hardwareback";
@@ -126,6 +127,7 @@ public class InAppBrowser extends CordovaPlugin {
     private boolean showLocationBar = true;
     private boolean showZoomControls = true;
     private boolean openWindowHidden = false;
+    private boolean blockImageLoading = false;
     private boolean clearAllCache = false;
     private boolean clearSessionCache = false;
     private boolean hadwareBackButton = true;
@@ -659,6 +661,10 @@ public class InAppBrowser extends CordovaPlugin {
             if (mediaPlayback != null) {
                 mediaPlaybackRequiresUserGesture = mediaPlayback.equals("yes") ? true : false;
             }
+            String blockImages = features.get(BLOCK_IMAGES);
+            if (blockImages != null) {
+                blockImageLoading = blockImages.equals("yes") ? true : false;
+            }
             String cache = features.get(CLEAR_ALL_CACHE);
             if (cache != null) {
                 clearAllCache = cache.equals("yes") ? true : false;
@@ -944,6 +950,11 @@ public class InAppBrowser extends CordovaPlugin {
                 settings.setJavaScriptCanOpenWindowsAutomatically(true);
                 settings.setBuiltInZoomControls(showZoomControls);
                 settings.setPluginState(android.webkit.WebSettings.PluginState.ON);
+
+                // Disables remote image loading
+                if (blockImageLoading) {
+                    settings.setLoadsImagesAutomatically(false);
+                }
 
                 // Add postMessage interface
                 class JsObject {
