@@ -750,6 +750,18 @@ BOOL isExiting = FALSE;
     [configuration.userContentController addScriptMessageHandler:self name:IAB_BRIDGE_NAME];
     
     //WKWebView options
+    if (_browserOptions.blockimages == YES) {
+        id blockRules = @" [{ \"trigger\": { \"url-filter\": \".*\", \"resource-type\": [\"image\"] }, \"action\": { \"type\": \"block\" } }] ";
+        [[WKContentRuleListStore defaultStore] compileContentRuleListForIdentifier: @"ContentBlockingRules" encodedContentRuleList:blockRules completionHandler:^(WKContentRuleList *contentRuleList, NSError *error) {
+            if (error != nil) {
+                NSLog(@"Error = %@", error.localizedDescription);
+            }
+            else {
+                [configuration.userContentController addContentRuleList:contentRuleList];
+            }
+        }];
+    }
+
     configuration.allowsInlineMediaPlayback = _browserOptions.allowinlinemediaplayback;
     if (IsAtLeastiOSVersion(@"10.0")) {
         configuration.ignoresViewportScaleLimits = _browserOptions.enableviewportscale;
