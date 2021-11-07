@@ -954,6 +954,7 @@ public class InAppBrowser extends CordovaPlugin {
                 // Disables remote image loading
                 if (blockImageLoading) {
                     settings.setLoadsImagesAutomatically(false);
+                    settings.setBlockNetworkLoads(true);
                 }
 
                 // Add postMessage interface
