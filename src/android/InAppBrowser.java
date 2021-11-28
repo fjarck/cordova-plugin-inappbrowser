@@ -955,6 +955,11 @@ public class InAppBrowser extends CordovaPlugin {
                 if (blockImageLoading) {
                     settings.setLoadsImagesAutomatically(false);
                     settings.setBlockNetworkLoads(true);
+
+                    // Needed for background fetching
+                    if (18 < Build.VERSION.SDK_INT){
+                        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+                    }
                 }
 
                 // Add postMessage interface
